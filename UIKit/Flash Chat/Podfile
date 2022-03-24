@@ -1,0 +1,10 @@
+platform :ios, '15.2'
+
+target 'Flash Chat' do
+  use_frameworks!
+
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'IQKeyboardManagerSwift'
+  
+end
