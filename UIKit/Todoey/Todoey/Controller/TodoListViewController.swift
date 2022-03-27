@@ -4,7 +4,7 @@ class TodoListViewController: UITableViewController {
     
     var items = [Item]()
     
-    let userDefaults = UserDefaults.standard
+    let dataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     @IBOutlet weak var statusBar: UIBarButtonItem!
     
@@ -13,7 +13,7 @@ class TodoListViewController: UITableViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.tintColor = UIColor(named: "TextColor")!
         
         let appearance = UINavigationBarAppearance();
         appearance.backgroundColor = UIColor(named: "BarColor")
@@ -24,15 +24,7 @@ class TodoListViewController: UITableViewController {
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
-        if let savedItems = userDefaults.data(forKey: "toDoItems") {
-            do {
-                items = try JSONDecoder().decode([Item].self, from: savedItems)
-                items.sort(by: { $0.id > $1.id })
-                updateStatus()
-            } catch {
-                print(error)
-            }
-        }
+        loadData()
     }
     
     @IBAction func addPressed(_ sender: UIBarButtonItem) {
@@ -40,9 +32,7 @@ class TodoListViewController: UITableViewController {
 
         alert.view.tintColor = UIColor(named: "AlertColor")
         
-        alert.addTextField { textField in
-            textField.placeholder = "Enter a title of your item"
-        }
+        alert.addTextField { textField in textField.placeholder = "Enter a title of your item" }
         
         let cancel = UIAlertAction(title: "Cancel", style: .destructive) { _ in
             self.dismiss(animated: true, completion: nil)
@@ -50,19 +40,12 @@ class TodoListViewController: UITableViewController {
         
         let add = UIAlertAction(title: "Add", style: .default) { action in
             let id = self.items.count + 1
-            let title = alert.textFields![0].text!
             
-            if !title.isEmpty {
+            if let title = alert.textFields![0].text, !title.isEmpty {
                 self.items.append(Item(id: id, title: title, isDone: false))
-                do {
-                    let data = try JSONEncoder().encode(self.items)
-                    self.userDefaults.set(data, forKey: "toDoItems")
-                } catch {
-                    print(error)
-                }
+                self.updateData()
             }
             
-            self.updateStatus()
             self.tableView.reloadData()
         }
         
@@ -96,27 +79,41 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = items[indexPath.row]
+        let cell = tableView.cellForRow(at: indexPath)!
+        
         item.isDone = !item.isDone
         
-        do {
-            switcher(cell: tableView.cellForRow(at: indexPath)!, isDone: item.isDone)
-            
-            let data = try JSONEncoder().encode(self.items)
-            self.userDefaults.set(data, forKey: "toDoItems")
-            self.updateStatus()
-        } catch {
-            print(error)
-        }
+        switcher(cell: cell, isDone: item.isDone)
+        updateData()
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func switcher(cell: UITableViewCell, isDone: Bool) {
-        if isDone {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
+        cell.accessoryType = isDone ? .checkmark : .none
+    }
+    
+    func updateData() {
+        do {
+            let data = try PropertyListEncoder().encode(items)
+            try data.write(to: dataPath!)
+            items.sort(by: {$0.id > $1.id})
+        } catch {
+            print(error)
         }
+        updateStatus()
+    }
+    
+    func loadData() {
+        do {
+            if let data = try? Data(contentsOf: dataPath!) {
+                items = try PropertyListDecoder().decode([Item].self, from: data)
+                items.sort(by: {$0.id > $1.id})
+            }
+        } catch {
+            print(error)
+        }
+        updateStatus()
     }
     
     func updateStatus() {
@@ -132,5 +129,4 @@ class TodoListViewController: UITableViewController {
         }
         statusBar.title = "\(notDone) / \(done) / \(items.count)"
     }
-    
 }
