@@ -14,6 +14,7 @@
 		3B110E3527EE5742004EC44A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B110E3427EE5742004EC44A /* Assets.xcassets */; };
 		3B110E3827EE5742004EC44A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B110E3627EE5742004EC44A /* LaunchScreen.storyboard */; };
 		3B7D85F027F2411000F3C5C2 /* Todoey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3B7D85EE27F2411000F3C5C2 /* Todoey.xcdatamodeld */; };
+		3B7D85F227F3309C00F3C5C2 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7D85F127F3309C00F3C5C2 /* CategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		3B110E3727EE5742004EC44A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3B110E3927EE5742004EC44A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B7D85EF27F2411000F3C5C2 /* Todoey.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Todoey.xcdatamodel; sourceTree = "<group>"; };
+		3B7D85F127F3309C00F3C5C2 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 		3B297B0C27EF4C1D00C31673 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				3B7D85F127F3309C00F3C5C2 /* CategoryViewController.swift */,
 				3B110E2F27EE573F004EC44A /* TodoListViewController.swift */,
 			);
 			path = Controller;
@@ -165,6 +168,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B7D85F227F3309C00F3C5C2 /* CategoryViewController.swift in Sources */,
 				3B7D85F027F2411000F3C5C2 /* Todoey.xcdatamodeld in Sources */,
 				3B110E3027EE573F004EC44A /* TodoListViewController.swift in Sources */,
 				3B110E2C27EE573F004EC44A /* AppDelegate.swift in Sources */,

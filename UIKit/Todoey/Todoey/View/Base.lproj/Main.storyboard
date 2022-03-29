@@ -7,7 +7,66 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="Iek-bd-nBs">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0I7-pO-El0" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ui4-Rz-HkS">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Pen-wp-sFg" kind="relationship" relationship="rootViewController" id="JQ5-2u-RG4"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AfJ-v8-pXL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-746" y="73"/>
+        </scene>
         <!--Todoey-->
+        <scene sceneID="k1V-g7-ujw">
+            <objects>
+                <tableViewController id="Pen-wp-sFg" customClass="CategoryViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="gcs-3m-22T">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" name="AccentColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="categoryCell" id="tmO-Bg-6uC">
+                                <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tmO-Bg-6uC" id="sh9-gf-lcY">
+                                    <rect key="frame" x="0.0" y="0.0" width="385.5" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" name="AccentColor"/>
+                                <color key="tintColor" red="0.0" green="0.67843137249999996" blue="0.70980392160000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Pen-wp-sFg" id="dBS-gg-SBH"/>
+                            <outlet property="delegate" destination="Pen-wp-sFg" id="BJj-Lx-wcr"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Todoey" id="p8N-sG-zxH">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="f6m-6X-OmQ">
+                            <color key="tintColor" name="TextColor"/>
+                            <connections>
+                                <action selector="addPressed:" destination="Pen-wp-sFg" id="nIw-9C-p99"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="va2-qi-BOf" kind="show" identifier="goToItems" id="vw9-MM-Dly"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aEU-pP-3gY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-41" y="73"/>
+        </scene>
+        <!--Todo List View Controller-->
         <scene sceneID="j1p-E1-Wdh">
             <objects>
                 <tableViewController id="va2-qi-BOf" customClass="TodoListViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
@@ -15,7 +74,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="AccentColor"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" translucent="NO" id="DjB-oe-JOm">
+                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search" translucent="NO" id="DjB-oe-JOm">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" name="AccentColor"/>
@@ -35,7 +94,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" name="AccentColor"/>
-                                <color key="tintColor" red="0.0" green="0.67843137254901964" blue="0.70980392156862748" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.0" green="0.67843137249999996" blue="0.70980392160000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -43,7 +102,7 @@
                             <outlet property="delegate" destination="va2-qi-BOf" id="5EK-Fb-q9p"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoey" id="J0g-rC-GFO">
+                    <navigationItem key="navigationItem" id="J0g-rC-GFO">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="6ob-Xu-Equ">
                             <color key="tintColor" name="TextColor"/>
                             <connections>
@@ -55,24 +114,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AkA-qi-tso" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="668.11594202898561" y="72.991071428571431"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Iek-bd-nBs">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0I7-pO-El0" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ui4-Rz-HkS">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="va2-qi-BOf" kind="relationship" relationship="rootViewController" id="wa6-S7-3RF"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AfJ-v8-pXL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-242.0289855072464" y="72.991071428571431"/>
         </scene>
     </scenes>
     <resources>

@@ -1,18 +1,12 @@
 import UIKit
 import CoreData
 
-class TodoListViewController: UITableViewController {
+class CategoryViewController: UITableViewController {
     
-    var items = [Item]()
-    
-    var selectedCategory: Category? {
-        didSet {
-            loadData()
-        }
-    }
+    var categories = [Category]()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,14 +20,16 @@ class TodoListViewController: UITableViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        loadData()
     }
-    
+
     @IBAction func addPressed(_ sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add new category", message: "", preferredStyle: .alert)
 
         alert.view.tintColor = UIColor(named: "AlertColor")
         
-        alert.addTextField { textField in textField.placeholder = "Enter a title of your item" }
+        alert.addTextField { textField in textField.placeholder = "Enter a title of your category" }
         
         let cancel = UIAlertAction(title: "Cancel", style: .destructive) { _ in
             self.dismiss(animated: true, completion: nil)
@@ -41,11 +37,10 @@ class TodoListViewController: UITableViewController {
         
         let add = UIAlertAction(title: "Add", style: .default) { action in
             if let title = alert.textFields![0].text, !title.isEmpty {
-                let item = Item(context: self.context)
-                item.title = title
-                item.category = self.selectedCategory
+                let category = Category(context: self.context)
+                category.title = title
                 
-                self.items.append(item)
+                self.categories.append(category)
                 self.updateData()
             }
             
@@ -61,44 +56,47 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return categories.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "todoItemCell", for: indexPath)
-        let item = items[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+        let category = categories[indexPath.row]
         
-        cell.textLabel?.text = item.title
+        cell.textLabel?.text = category.title
         cell.textLabel?.textColor = UIColor(named: "TextColor")!
         
         let backgroundViewCell = UIView()
         backgroundViewCell.backgroundColor = UIColor(named: "CellColor")!
         cell.selectedBackgroundView = backgroundViewCell
         
-        switcher(cell: cell, done: item.done)
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        items[indexPath.row].done = !items[indexPath.row].done
-        switcher(cell: tableView.cellForRow(at: indexPath)!, done: items[indexPath.row].done)
-        
-        updateData()
+        performSegue(withIdentifier: "goToItems", sender: self)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            context.delete(items[indexPath.row])
+            deleteAllItemsByCategory(categories[indexPath.row])
+            context.delete(categories[indexPath.row])
             updateData()
-            items.remove(at: indexPath.row)
+            categories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    func switcher(cell: UITableViewCell, done: Bool) {
-        cell.accessoryType = done ? .checkmark : .none
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destination = segue.destination as! TodoListViewController
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destination.selectedCategory = categories[indexPath.row]
+            let backItem = UIBarButtonItem()
+            backItem.title = subTitle(String(categories[indexPath.row].title!))
+            navigationItem.backBarButtonItem = backItem
+        }
     }
     
     func updateData() {
@@ -109,40 +107,35 @@ class TodoListViewController: UITableViewController {
         }
     }
     
-    func loadData(with request: NSFetchRequest<Item> = Item.fetchRequest(), _ predicate: NSPredicate? = nil) {
-        if let safePredicate = predicate {
-            request.predicate = safePredicate
-        } else {
-            request.predicate = NSPredicate(format: "category.title MATCHES[cd] %@", selectedCategory!.title!)
-        }
-        
+    func loadData(_ request: NSFetchRequest<Category> = Category.fetchRequest()) {
         do {
-            items = try context.fetch(request)
+            categories = try context.fetch(request)
         } catch {
             print(error)
         }
-        
         tableView.reloadData()
     }
-}
-
-extension TodoListViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    
+    func deleteAllItemsByCategory(_ category: Category) {
         let request: NSFetchRequest<Item> = Item.fetchRequest()
-        
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        loadData(with: request, predicate)
+        request.predicate = NSPredicate(format: "category.title MATCHES[cd] %@", category.title!)
+        do {
+            var items = try context.fetch(request)
+            for item in items {
+                context.delete(item)
+            }
+            updateData()
+            items.removeAll()
+        } catch {
+            print(error)
+        }
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.count == 0 {
-            loadData()
-            
-            DispatchQueue.main.async {
-                searchBar.resignFirstResponder()
-            }
+    func subTitle(_ title: String) -> String {
+        if title.count > 15 {
+            return "\(title.prefix(15))..."
+        } else {
+            return title
         }
     }
 }
