@@ -15,9 +15,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="AccentColor"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" translucent="NO" id="DjB-oe-JOm">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" name="AccentColor"/>
+                            <color key="tintColor" name="AlertColor"/>
+                            <color key="barTintColor" name="AccentColor"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="va2-qi-BOf" id="uml-S5-q4U"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="todoItemCell" id="ByG-un-fhp">
-                                <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="88.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ByG-un-fhp" id="KHN-1Y-QKL">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -33,7 +44,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Todoey" id="J0g-rC-GFO">
-                        <barButtonItem key="leftBarButtonItem" title="0 / 0 / 0" id="DtF-VZ-Am3"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="6ob-Xu-Equ">
                             <color key="tintColor" name="TextColor"/>
                             <connections>
@@ -41,9 +51,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="statusBar" destination="DtF-VZ-Am3" id="o8j-Rq-J4R"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AkA-qi-tso" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -71,6 +78,9 @@
     <resources>
         <namedColor name="AccentColor">
             <color red="0.93300002813339233" green="0.93300002813339233" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="AlertColor">
+            <color red="0.0" green="0.67799997329711914" blue="0.70999997854232788" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="TextColor">
             <color red="0.13300000131130219" green="0.15700000524520874" blue="0.19200000166893005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

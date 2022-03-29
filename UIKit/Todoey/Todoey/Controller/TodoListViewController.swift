@@ -1,24 +1,23 @@
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
     var items = [Item]()
     
-    let dataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-
-    @IBOutlet weak var statusBar: UIBarButtonItem!
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = true
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.tintColor = UIColor(named: "TextColor")!
         
         let appearance = UINavigationBarAppearance();
         appearance.backgroundColor = UIColor(named: "BarColor")
         appearance.titleTextAttributes = [.foregroundColor: UIColor(named: "TextColor")!]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(named: "TextColor")!]
         
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
@@ -39,10 +38,11 @@ class TodoListViewController: UITableViewController {
         }
         
         let add = UIAlertAction(title: "Add", style: .default) { action in
-            let id = self.items.count + 1
-            
             if let title = alert.textFields![0].text, !title.isEmpty {
-                self.items.append(Item(id: id, title: title, isDone: false))
+                let item = Item(context: self.context)
+                item.title = title
+                
+                self.items.append(item)
                 self.updateData()
             }
             
@@ -72,61 +72,58 @@ class TodoListViewController: UITableViewController {
         backgroundViewCell.backgroundColor = UIColor(named: "CellColor")!
         cell.selectedBackgroundView = backgroundViewCell
         
-        switcher(cell: cell, isDone: item.isDone)
+        switcher(cell: cell, done: item.done)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = items[indexPath.row]
-        let cell = tableView.cellForRow(at: indexPath)!
+        items[indexPath.row].done = !items[indexPath.row].done
+        switcher(cell: tableView.cellForRow(at: indexPath)!, done: items[indexPath.row].done)
         
-        item.isDone = !item.isDone
-        
-        switcher(cell: cell, isDone: item.isDone)
         updateData()
-        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func switcher(cell: UITableViewCell, isDone: Bool) {
-        cell.accessoryType = isDone ? .checkmark : .none
+    func switcher(cell: UITableViewCell, done: Bool) {
+        cell.accessoryType = done ? .checkmark : .none
     }
     
     func updateData() {
         do {
-            let data = try PropertyListEncoder().encode(items)
-            try data.write(to: dataPath!)
-            items.sort(by: {$0.id > $1.id})
+            try context.save()
         } catch {
             print(error)
         }
-        updateStatus()
     }
     
-    func loadData() {
+    func loadData(_ request: NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
-            if let data = try? Data(contentsOf: dataPath!) {
-                items = try PropertyListDecoder().decode([Item].self, from: data)
-                items.sort(by: {$0.id > $1.id})
-            }
+            items = try context.fetch(request)
         } catch {
             print(error)
         }
-        updateStatus()
+        tableView.reloadData()
+    }
+}
+
+extension TodoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadData(request)
     }
     
-    func updateStatus() {
-        var done = 0
-        var notDone = 0
-        
-        for item in items {
-            if item.isDone {
-                done += 1
-            } else {
-                notDone += 1
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadData()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
             }
         }
-        statusBar.title = "\(notDone) / \(done) / \(items.count)"
     }
 }
