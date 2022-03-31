@@ -1,11 +1,11 @@
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    var categories = [Category]()
+    let realm = try! Realm()
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var categories: Results<Category>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +21,7 @@ class CategoryViewController: UITableViewController {
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
-        loadData()
+        load()
     }
 
     @IBAction func addPressed(_ sender: UIBarButtonItem) {
@@ -37,11 +37,10 @@ class CategoryViewController: UITableViewController {
         
         let add = UIAlertAction(title: "Add", style: .default) { action in
             if let title = alert.textFields![0].text, !title.isEmpty {
-                let category = Category(context: self.context)
+                let category = Category()
                 category.title = title
                 
-                self.categories.append(category)
-                self.updateData()
+                self.save(category: category)
             }
             
             self.tableView.reloadData()
@@ -56,14 +55,14 @@ class CategoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
-        let category = categories[indexPath.row]
+        let category = categories?[indexPath.row]
         
-        cell.textLabel?.text = category.title
+        cell.textLabel?.text = category?.title ?? "Not categories added yet"
         cell.textLabel?.textColor = UIColor(named: "TextColor")!
         
         let backgroundViewCell = UIView()
@@ -80,55 +79,45 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            deleteAllItemsByCategory(categories[indexPath.row])
-            context.delete(categories[indexPath.row])
-            updateData()
-            categories.remove(at: indexPath.row)
+            if let category = categories?[indexPath.row] {
+                do {
+                    try realm.write {
+                        realm.delete(category.items)
+                        realm.delete(category)
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+            
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destination = segue.destination as! TodoListViewController
+        let destination = segue.destination as! ItemViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destination.selectedCategory = categories[indexPath.row]
+            destination.selectedCategory = categories?[indexPath.row]
             let backItem = UIBarButtonItem()
-            backItem.title = subTitle(String(categories[indexPath.row].title!))
+            backItem.title = subTitle(String(categories?[indexPath.row].title ?? "Back"))
             navigationItem.backBarButtonItem = backItem
         }
     }
     
-    func updateData() {
+    func save(category: Category) {
         do {
-            try context.save()
-        } catch {
-            print(error)
-        }
-    }
-    
-    func loadData(_ request: NSFetchRequest<Category> = Category.fetchRequest()) {
-        do {
-            categories = try context.fetch(request)
-        } catch {
-            print(error)
-        }
-        tableView.reloadData()
-    }
-    
-    func deleteAllItemsByCategory(_ category: Category) {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
-        request.predicate = NSPredicate(format: "category.title MATCHES[cd] %@", category.title!)
-        do {
-            var items = try context.fetch(request)
-            for item in items {
-                context.delete(item)
+            try realm.write {
+                realm.add(category)
             }
-            updateData()
-            items.removeAll()
         } catch {
             print(error)
         }
+    }
+    
+    func load() {
+        categories = realm.objects(Category.self)
+        tableView.reloadData()
     }
     
     func subTitle(_ title: String) -> String {
