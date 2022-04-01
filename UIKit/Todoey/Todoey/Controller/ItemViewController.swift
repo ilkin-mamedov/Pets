@@ -35,7 +35,7 @@ class ItemViewController: UITableViewController {
         
         alert.addTextField { textField in textField.placeholder = "Enter a title of your item" }
         
-        let cancel = UIAlertAction(title: "Cancel", style: .destructive) { _ in
+        let cancel = UIAlertAction(title: "Cancel", style: .default) { _ in
             self.dismiss(animated: true, completion: nil)
         }
         
@@ -47,6 +47,7 @@ class ItemViewController: UITableViewController {
                     try self.realm.write {
                         let item = Item()
                         item.title = title
+                        item.dateCreated = Date.now
                         currentCategory.items.append(item)
                     }
                 } catch {
@@ -74,7 +75,14 @@ class ItemViewController: UITableViewController {
         
         if let item = items?[indexPath.row] {
             cell.textLabel?.text = item.title
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
             cell.textLabel?.textColor = UIColor(named: "TextColor")!
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm MMM d, yyyy "
+            cell.detailTextLabel?.text = dateFormatter.string(from: item.dateCreated!)
+            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
+            cell.detailTextLabel?.textColor = UIColor(named: "TextColor")!
             
             let backgroundViewCell = UIView()
             backgroundViewCell.backgroundColor = UIColor(named: "CellColor")!
@@ -103,20 +111,42 @@ class ItemViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            if let item = items?[indexPath.row] {
-                do {
-                    try realm.write {
-                        realm.delete(item)
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+            -> UISwipeActionsConfiguration? {
+            let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
+                if let item = self.items?[indexPath.row] {
+                    let alert = UIAlertController(title: "Do you really want to delete '\(item.title)' item?", message: "If you delete it, you will no longer be able to recover it.", preferredStyle: .alert)
+
+                    alert.view.tintColor = UIColor(named: "AlertColor")
+
+                    let cancel = UIAlertAction(title: "Cancel", style: .default) { _ in
+                        self.dismiss(animated: true, completion: nil)
                     }
-                } catch {
-                    print(error)
+
+                    let delete = UIAlertAction(title: "Delete", style: .destructive) { action in
+                        do {
+                            try self.realm.write {
+                                self.realm.delete(item)
+                            }
+                        } catch {
+                            print(error)
+                        }
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+
+                    alert.addAction(cancel)
+                    alert.addAction(delete)
+
+                    self.present(alert, animated: true, completion: {
+                        alert.view.tintColor = UIColor(named: "AlertColor")
+                    })
                 }
+                completionHandler(true)
             }
-            
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
+            deleteAction.image = UIImage(systemName: "trash")
+            deleteAction.backgroundColor = .systemRed
+            let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+            return configuration
     }
     
     func switcher(cell: UITableViewCell, done: Bool) {
@@ -124,28 +154,24 @@ class ItemViewController: UITableViewController {
     }
     
     func load() {
-        items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        items = selectedCategory?.items.sorted(byKeyPath: "dateCreated", ascending: false)
         tableView.reloadData()
     }
 }
 
-//extension ItemViewController: UISearchBarDelegate {
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let request: NSFetchRequest<Item> = Item.fetchRequest()
-//
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        loadData(with: request, predicate)
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count == 0 {
-//            loadData()
-//
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//        }
-//    }
-//}
+extension ItemViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        items = items?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: false)
+        tableView.reloadData()
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            load()
+
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}

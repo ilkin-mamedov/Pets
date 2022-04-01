@@ -6,6 +6,11 @@ class CategoryViewController: UITableViewController {
     let realm = try! Realm()
     
     var categories: Results<Category>?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        load()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +36,7 @@ class CategoryViewController: UITableViewController {
         
         alert.addTextField { textField in textField.placeholder = "Enter a title of your category" }
         
-        let cancel = UIAlertAction(title: "Cancel", style: .destructive) { _ in
+        let cancel = UIAlertAction(title: "Cancel", style: .default) { _ in
             self.dismiss(animated: true, completion: nil)
         }
         
@@ -39,6 +44,7 @@ class CategoryViewController: UITableViewController {
             if let title = alert.textFields![0].text, !title.isEmpty {
                 let category = Category()
                 category.title = title
+                category.dateCreated = Date.now
                 
                 self.save(category: category)
             }
@@ -63,7 +69,12 @@ class CategoryViewController: UITableViewController {
         let category = categories?[indexPath.row]
         
         cell.textLabel?.text = category?.title ?? "Not categories added yet"
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         cell.textLabel?.textColor = UIColor(named: "TextColor")!
+        
+        cell.detailTextLabel?.text = "\(category?.items.count ?? 0) items"
+        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
+        cell.detailTextLabel?.textColor = UIColor(named: "TextColor")!
         
         let backgroundViewCell = UIView()
         backgroundViewCell.backgroundColor = UIColor(named: "CellColor")!
@@ -77,21 +88,43 @@ class CategoryViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            if let category = categories?[indexPath.row] {
-                do {
-                    try realm.write {
-                        realm.delete(category.items)
-                        realm.delete(category)
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+            -> UISwipeActionsConfiguration? {
+            let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
+                if let category = self.categories?[indexPath.row] {
+                    let alert = UIAlertController(title: "Do you really want to delete '\(category.title)' category?", message: "If you delete it, you will no longer be able to recover it.", preferredStyle: .alert)
+
+                    alert.view.tintColor = UIColor(named: "AlertColor")
+                    
+                    let cancel = UIAlertAction(title: "Cancel", style: .default) { _ in
+                        self.dismiss(animated: true, completion: nil)
                     }
-                } catch {
-                    print(error)
+                    
+                    let delete = UIAlertAction(title: "Delete", style: .destructive) { action in
+                        do {
+                            try self.realm.write {
+                                self.realm.delete(category.items)
+                                self.realm.delete(category)
+                            }
+                        } catch {
+                            print(error)
+                        }
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                    
+                    alert.addAction(cancel)
+                    alert.addAction(delete)
+                    
+                    self.present(alert, animated: true, completion: {
+                        alert.view.tintColor = UIColor(named: "AlertColor")
+                    })
                 }
+                completionHandler(true)
             }
-            
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
+            deleteAction.image = UIImage(systemName: "trash")
+            deleteAction.backgroundColor = .systemRed
+            let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+            return configuration
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -116,7 +149,7 @@ class CategoryViewController: UITableViewController {
     }
     
     func load() {
-        categories = realm.objects(Category.self)
+        categories = realm.objects(Category.self).sorted(byKeyPath: "dateCreated", ascending: false)
         tableView.reloadData()
     }
     
