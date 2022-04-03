@@ -74,7 +74,7 @@ class CategoryViewController: UITableViewController {
         
         cell.detailTextLabel?.text = "\(category?.items.count ?? 0) items"
         cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
-        cell.detailTextLabel?.textColor = UIColor(named: "TextColor")!
+        cell.detailTextLabel?.textColor = .systemGray
         
         let backgroundViewCell = UIView()
         backgroundViewCell.backgroundColor = UIColor(named: "CellColor")!
@@ -92,7 +92,7 @@ class CategoryViewController: UITableViewController {
             -> UISwipeActionsConfiguration? {
             let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
                 if let category = self.categories?[indexPath.row] {
-                    let alert = UIAlertController(title: "Do you really want to delete '\(category.title)' category?", message: "If you delete it, you will no longer be able to recover it.", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Do you really want to delete '\(category.title!)' category?", message: "If you delete it, you will no longer be able to recover it.", preferredStyle: .alert)
 
                     alert.view.tintColor = UIColor(named: "AlertColor")
                     

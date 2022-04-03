@@ -82,7 +82,7 @@ class ItemViewController: UITableViewController {
             dateFormatter.dateFormat = "HH:mm MMM d, yyyy "
             cell.detailTextLabel?.text = dateFormatter.string(from: item.dateCreated!)
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
-            cell.detailTextLabel?.textColor = UIColor(named: "TextColor")!
+            cell.detailTextLabel?.textColor = .systemGray
             
             let backgroundViewCell = UIView()
             backgroundViewCell.backgroundColor = UIColor(named: "CellColor")!
@@ -115,7 +115,7 @@ class ItemViewController: UITableViewController {
             -> UISwipeActionsConfiguration? {
             let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
                 if let item = self.items?[indexPath.row] {
-                    let alert = UIAlertController(title: "Do you really want to delete '\(item.title)' item?", message: "If you delete it, you will no longer be able to recover it.", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Do you really want to delete '\(item.title!)' item?", message: "If you delete it, you will no longer be able to recover it.", preferredStyle: .alert)
 
                     alert.view.tintColor = UIColor(named: "AlertColor")
 
