@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         manager.setNumber(displayValue)
         
         if let method = sender.titleLabel?.text {
-            if let result = manager.calculate(method: method) {
+            if let result = manager.manage(method: method) {
                 displayValue = result
             }
         }

@@ -9,7 +9,7 @@ struct CalculatorManager {
         self.number = number
     }
     
-    mutating func calculate(method: String) -> Double? {
+    mutating func manage(method: String) -> Double? {
         if let safeNumber = number {
             switch method {
                 case "AC":
@@ -20,17 +20,17 @@ struct CalculatorManager {
                 case "%":
                     return safeNumber / 100
                 case "=":
-                    return perform(safeNumber)
+                    return calculate(safeNumber)
                 default:
-                    last = (number: perform(safeNumber)!, method: method)
-                    return perform(safeNumber)
+                    last = (number: safeNumber, method: method)
+                    return safeNumber
             }
         } else {
             return nil
         }
     }
     
-    private func perform(_ number: Double) -> Double? {
+    private func calculate(_ number: Double) -> Double? {
         if let safeNumber = last?.number,
            let safeMethod = last?.method {
             switch safeMethod {
