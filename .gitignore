@@ -10,8 +10,6 @@
 
 # CoreML
 *.mlmodel
-/UIKit/WhatFlower/WhatFlower/FlowerClassifier.mlmodel
-/UIKit/SeeFood/SeeFood/Inceptionv3.mlmodel
 
 ## User settings
 xcuserdata/
