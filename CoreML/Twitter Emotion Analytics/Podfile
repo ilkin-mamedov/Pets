@@ -1,0 +1,9 @@
+platform :ios, '15.4 '
+
+target 'Twitter Emotion Analytics' do
+  use_frameworks!
+
+  pod 'SwiftyJSON'
+
+end
+ 

@@ -11,6 +11,9 @@
 # CoreML
 *.mlmodel
 
+#Swifter
+CoreML/Swifter/
+
 ## User settings
 xcuserdata/
 

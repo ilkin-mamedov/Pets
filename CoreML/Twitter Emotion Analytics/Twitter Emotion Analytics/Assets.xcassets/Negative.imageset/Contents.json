@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Sad.png",
+      "filename" : "Negative.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Sad@2x.png",
+      "filename" : "Negative@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Sad@3x.png",
+      "filename" : "Negative@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
