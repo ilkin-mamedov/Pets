@@ -37,7 +37,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         placeholderLabel.text = "Tap  the camera button\nto take a photo"
         
         imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary
+        imagePicker.sourceType = .camera
         imagePicker.allowsEditing = true
         imagePicker.mediaTypes = ["public.image", "public.movie"]
         
