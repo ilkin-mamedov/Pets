@@ -5,6 +5,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var stopButton: UIButton!
+    
     let eggTimes = ["Soft" : 300, "Medium" : 420, "Hard" : 720]
     var timer = Timer()
     var totalTime = 0
@@ -24,9 +26,11 @@ class ViewController: UIViewController {
                 self.secondsPassed += 1
                 self.titleLabel.text = "\(sender.currentTitle!) Level\n(\(self.secondsPassed) seconds passed)"
                 self.progressView.progress = Float(self.secondsPassed) / Float(self.totalTime)
+                self.stopButton.isHidden = false
             } else {
                 self.timer.invalidate()
                 self.titleLabel.text = "Done!"
+                self.stopButton.isHidden = true
                 self.player = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "alarm_sound", withExtension: "wav")!)
                 self.player!.play()
             }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,19 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" highlighted="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7vm-Tq-8xP">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="7vm-Tq-8xP">
                                 <rect key="frame" x="82" y="323" width="250" height="250"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="Som-zd-OMG"/>
-                                    <constraint firstAttribute="width" constant="250" id="hft-1q-LVq"/>
+                                    <constraint firstAttribute="height" constant="250" id="BCE-QU-hJp"/>
+                                    <constraint firstAttribute="width" constant="250" id="GLJ-Il-z2P"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="AccentColor"/>
                         <constraints>
-                            <constraint firstItem="7vm-Tq-8xP" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="QeK-vU-X21"/>
-                            <constraint firstItem="7vm-Tq-8xP" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="aCn-Mz-cnS"/>
+                            <constraint firstItem="7vm-Tq-8xP" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="6Aq-T0-I8m"/>
+                            <constraint firstItem="7vm-Tq-8xP" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="YfP-Bm-hFQ"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -40,7 +40,7 @@
     <resources>
         <image name="Logo" width="341" height="341"/>
         <namedColor name="AccentColor">
-            <color red="0.94117647058823528" green="0.32941176470588235" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94099998474121094" green="0.32899999618530273" blue="0.32899999618530273" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

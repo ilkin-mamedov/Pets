@@ -83,7 +83,6 @@
 				EE4D45D0219FA9532B76353C /* Pods-WhatFlower.debug.xcconfig */,
 				2A068BB53627F06082324031 /* Pods-WhatFlower.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

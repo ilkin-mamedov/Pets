@@ -13,9 +13,10 @@
 		3B2143312808A616008B944B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B21432F2808A616008B944B /* Main.storyboard */; };
 		3B2143332808A61D008B944B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B2143322808A61D008B944B /* Assets.xcassets */; };
 		3B2143362808A61D008B944B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B2143342808A61D008B944B /* LaunchScreen.storyboard */; };
+		3B443B3A2819768100B71297 /* Pods_Twitter_Emotion_Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5B2FE78B294099EB87396E4 /* Pods_Twitter_Emotion_Analytics.framework */; };
+		3B443B3B2819768100B71297 /* Pods_Twitter_Emotion_Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A5B2FE78B294099EB87396E4 /* Pods_Twitter_Emotion_Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3BEF3948280B661200FAAB41 /* EmotionClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 3BEF3947280B661100FAAB41 /* EmotionClassifier.mlmodel */; };
 		3BEF39BD280C374E00FAAB41 /* SwifteriOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3BEF39B4280C374400FAAB41 /* SwifteriOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		7F14635818A2611634444803 /* Pods_Twitter_Emotion_Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5B2FE78B294099EB87396E4 /* Pods_Twitter_Emotion_Analytics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				3BEF39BD280C374E00FAAB41 /* SwifteriOS.framework in Embed Frameworks */,
+				3B443B3B2819768100B71297 /* Pods_Twitter_Emotion_Analytics.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,7 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F14635818A2611634444803 /* Pods_Twitter_Emotion_Analytics.framework in Frameworks */,
+				3B443B3A2819768100B71297 /* Pods_Twitter_Emotion_Analytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
