@@ -12,10 +12,6 @@ class ViewController: UIViewController {
     var totalTime = 0
     var secondsPassed = 0
     var player: AVAudioPlayer?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 
     @IBAction func hardnessSelected(_ sender: UIButton) {
         reset()
@@ -24,7 +20,7 @@ class ViewController: UIViewController {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (Timer) in
             if self.secondsPassed < self.totalTime {
                 self.secondsPassed += 1
-                self.titleLabel.text = "\(sender.currentTitle!) Level\n(\(self.secondsPassed) seconds passed)"
+                self.titleLabel.text = "\(sender.currentTitle!) Level\n\(self.secondsPassed) seconds passed"
                 self.progressView.progress = Float(self.secondsPassed) / Float(self.totalTime)
                 self.stopButton.isHidden = false
             } else {
@@ -40,6 +36,7 @@ class ViewController: UIViewController {
     @IBAction func stop(_ sender: UIButton) {
         reset()
         self.titleLabel.text = "How do you like your eggs?"
+        self.stopButton.isHidden = true
     }
     
     func reset() {
@@ -47,5 +44,4 @@ class ViewController: UIViewController {
         progressView.progress = 0.0
         secondsPassed = 0
     }
-    
 }
